@@ -1,0 +1,30 @@
+Report for: Pride_and_Prejudice_by_Jane_Austen.txt
+-------------------------------
+A occurs: 42694 times. = 7,739%
+B occurs: 9363 times. = 1,697%
+C occurs: 14061 times. = 2,549%
+D occurs: 22842 times. = 4,140%
+E occurs: 71195 times. = 12,905%
+F occurs: 12381 times. = 2,244%
+G occurs: 10443 times. = 1,893%
+H occurs: 34581 times. = 6,268%
+I occurs: 38945 times. = 7,059%
+J occurs: 970 times. = 0,176%
+K occurs: 3342 times. = 0,606%
+L occurs: 22071 times. = 4,001%
+M occurs: 15124 times. = 2,741%
+N occurs: 38722 times. = 7,019%
+O occurs: 41379 times. = 7,500%
+P occurs: 8683 times. = 1,574%
+Q occurs: 638 times. = 0,116%
+R occurs: 33467 times. = 6,066%
+S occurs: 33870 times. = 6,139%
+T occurs: 48158 times. = 8,729%
+U occurs: 15509 times. = 2,811%
+V occurs: 5840 times. = 1,059%
+W occurs: 12573 times. = 2,279%
+X occurs: 867 times. = 0,157%
+Y occurs: 13033 times. = 2,362%
+Z occurs: 938 times. = 0,170%
+-------------------------------
+total length = 551689

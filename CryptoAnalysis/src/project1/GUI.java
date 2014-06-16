@@ -38,7 +38,7 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 		for (int i = 0; i < buttons.length; i++)
 		{
 			buttons[i] = new JButton();
-			buttons[i].setPreferredSize(new Dimension(width / 7, height / 20));
+			buttons[i].setPreferredSize(new Dimension(width / 6, height / 20));
 			controls.add(buttons[i]);
 		}
 		buttons[0].setText("Reset");

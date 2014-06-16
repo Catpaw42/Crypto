@@ -2,6 +2,11 @@ package project1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.FileAlreadyExistsException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +19,7 @@ import java.util.regex.Pattern;
 public class FrequencyAnalyser
 {
 	private File f;
+	private char[] charSet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	/**
 	 * 
 	 * @param path Path to the file that should be analyzed
@@ -26,6 +32,38 @@ public class FrequencyAnalyser
 		if(!f.exists())
 			throw new FileNotFoundException();
 		
+	}
+	
+	public void generateReport(String path) throws FileAlreadyExistsException
+	{
+		File newfile = new File(path);
+		if(newfile.exists())
+			throw new FileAlreadyExistsException("The file you try to write alreaddy exists!!");
+		try
+		{
+			int total = this.countCharsInFile();
+			int[] frequency = this.countOccurence(charSet);
+			NumberFormat formatter = new DecimalFormat("#0.000");
+			PrintWriter writer = new PrintWriter(path, "UTF-8");
+			writer.println("Report for: " + this.f.getName());
+			writer.println("-------------------------------");
+			for (int i = 0; i < frequency.length; i++)
+			{
+				writer.println(charSet[i] + " occurs: " + frequency[i] + " times. = " + formatter.format((double)frequency[i] * 100.0 / (double)total) + "%");
+			}
+			writer.println("-------------------------------");
+			writer.println("total length = " + total);
+			writer.close();
+		}
+		catch (FileNotFoundException e)
+		{
+			System.err.println("Cant create new file");
+			e.printStackTrace();
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Count the total number of Unicode letters that exist in this file
@@ -93,29 +131,42 @@ public class FrequencyAnalyser
 		return count;
 	}
 	
-	public int[] countOccurence(String[] alphabet) throws FileNotFoundException
+	public int[] countOccurence(char[] alphabet) throws FileNotFoundException
 	{
 		int[] ocurence = new int[alphabet.length];
 		for (int i = 0; i < alphabet.length; i++)
 		{
-			ocurence[i] = countOccurence(alphabet[i]);
+			ocurence[i] = countOccurence(""+alphabet[i]);
 		}
 		return ocurence;
 	}
 	
+	public char[] getCharSet()
+	{
+		return charSet;
+	}
+	public void setCharSet(char[] charSet)
+	{
+		this.charSet = charSet;
+	}
 	
 	public static void main(String[] args)
 	{
 		try
 		{
-			FrequencyAnalyser freak = new FrequencyAnalyser("src/project1/test.txt");
+			FrequencyAnalyser freak = new FrequencyAnalyser("src/project1/Pride_and_Prejudice_by_Jane_Austen.txt");
 			
-			System.out.println(freak.countCharsInFile());
-			System.out.println(freak.countOccurence("kaj"));
+			freak.generateReport("src/project1/Pride_and_Prejudice_by_Jane_Austen_REPORT.txt");
 		}
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
+		catch (FileAlreadyExistsException e)
+		{
+			System.err.println(e.getMessage());
+			e.printStackTrace();
+		}
 	}
+	
 }
