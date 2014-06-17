@@ -119,4 +119,6 @@ public class Controller implements ControllerInteface
 			encrypted += this.CryptogramKey.get(plaintext.charAt(i));
 		return encrypted;
 	}
+	
+	
 }

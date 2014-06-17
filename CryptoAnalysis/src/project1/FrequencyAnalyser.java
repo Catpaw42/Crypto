@@ -18,38 +18,33 @@ import java.util.regex.Pattern;
  */
 public class FrequencyAnalyser
 {
-	private File f;
-	private char[] charSet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	public static final char[] DefaultCharSet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	/**
 	 * 
 	 * @param path Path to the file that should be analyzed
 	 * @throws FileNotFoundException If the given path does not match a readable file
 	 */
-	public FrequencyAnalyser(String path) throws FileNotFoundException
+	public FrequencyAnalyser()
 	{
-		f = new File(path);
-		
-		if(!f.exists())
-			throw new FileNotFoundException();
 		
 	}
 	
-	public void generateReport(String path) throws FileAlreadyExistsException
+	public static void generateReport(String path) throws FileAlreadyExistsException
 	{
-		File newfile = new File(path);
+		File newfile = new File(path.substring(0, path.length()-4) + "_REPORT.txt");
 		if(newfile.exists())
 			throw new FileAlreadyExistsException("The file you try to write alreaddy exists!!");
 		try
 		{
-			int total = this.countCharsInFile();
-			int[] frequency = this.countOccurence(charSet);
+			int total = countCharsInFile(path);
+			int[] frequency = countOccurence(DefaultCharSet, path);
 			NumberFormat formatter = new DecimalFormat("#0.000");
-			PrintWriter writer = new PrintWriter(path, "UTF-8");
-			writer.println("Report for: " + this.f.getName());
+			PrintWriter writer = new PrintWriter(newfile.getAbsolutePath(), "UTF-8");
+			writer.println("Report for: " + newfile.getName().substring(0, newfile.getName().length() - ("_REPORT.txt".length() +1)) + ".txt");
 			writer.println("-------------------------------");
 			for (int i = 0; i < frequency.length; i++)
 			{
-				writer.println(charSet[i] + " occurs: " + frequency[i] + " times. = " + formatter.format((double)frequency[i] * 100.0 / (double)total) + "%");
+				writer.println(DefaultCharSet[i] + " occurs: " + frequency[i] + " times. = " + formatter.format((double)frequency[i] * 100.0 / (double)total) + "%");
 			}
 			writer.println("-------------------------------");
 			writer.println("total length = " + total);
@@ -70,8 +65,11 @@ public class FrequencyAnalyser
 	 * @return The number of letters
 	 * @throws FileNotFoundException If the given path does not match a readable file
 	 */
-	public int countCharsInFile() throws FileNotFoundException
+	public static int countCharsInFile(String path) throws FileNotFoundException
 	{
+		File f = new File(path);
+		if(!f.exists())
+			throw new FileNotFoundException();
 		Scanner scan = new Scanner(f);
 		int totalLength = 0;
 		
@@ -98,11 +96,14 @@ public class FrequencyAnalyser
 	 * @return The number of occurrences of the given n-gram or letter
 	 * @throws FileNotFoundException If the given path does not match a readable file
 	 */
-	public int countOccurence(String s) throws FileNotFoundException
+	public static int countOccurence(String s, String path) throws FileNotFoundException
 	{
 		//make sure the string is uppercase
 		s = s.toUpperCase();
 		
+		File f = new File(path);
+		if(!f.exists())
+			throw new FileNotFoundException();
 		Scanner scan = new Scanner(f);
 		int count = 0;
 		String remainder = "";
@@ -131,36 +132,21 @@ public class FrequencyAnalyser
 		return count;
 	}
 	
-	public int[] countOccurence(char[] alphabet) throws FileNotFoundException
+	public static int[] countOccurence(char[] alphabet, String path) throws FileNotFoundException
 	{
 		int[] ocurence = new int[alphabet.length];
 		for (int i = 0; i < alphabet.length; i++)
 		{
-			ocurence[i] = countOccurence(""+alphabet[i]);
+			ocurence[i] = countOccurence(""+alphabet[i], path);
 		}
 		return ocurence;
-	}
-	
-	public char[] getCharSet()
-	{
-		return charSet;
-	}
-	public void setCharSet(char[] charSet)
-	{
-		this.charSet = charSet;
 	}
 	
 	public static void main(String[] args)
 	{
 		try
 		{
-			FrequencyAnalyser freak = new FrequencyAnalyser("src/project1/Pride_and_Prejudice_by_Jane_Austen.txt");
-			
-			freak.generateReport("src/project1/Pride_and_Prejudice_by_Jane_Austen_REPORT.txt");
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
+			FrequencyAnalyser.generateReport("src/project1/Pride_and_Prejudice_by_Jane_Austen.txt");
 		}
 		catch (FileAlreadyExistsException e)
 		{

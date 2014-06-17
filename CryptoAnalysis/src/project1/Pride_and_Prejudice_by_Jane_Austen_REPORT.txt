@@ -1,4 +1,4 @@
-Report for: Pride_and_Prejudice_by_Jane_Austen.txt
+Report for: Pride_and_Prejudice_by_Jane_Auste.txt
 -------------------------------
 A occurs: 42694 times. = 7,739%
 B occurs: 9363 times. = 1,697%
