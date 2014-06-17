@@ -87,4 +87,9 @@ public class LetterPanel extends JPanel implements KeyListener
 	{
 
 	}
+
+	public void setText(String s)
+	{
+		this.plaintextField.setText(s);
+	}
 }

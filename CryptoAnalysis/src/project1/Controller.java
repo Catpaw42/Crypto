@@ -119,6 +119,25 @@ public class Controller implements ControllerInteface
 			encrypted += this.CryptogramKey.get(plaintext.charAt(i));
 		return encrypted;
 	}
+
+	@Override
+	public String solveCryptogram()
+	{
+		//do your frequenzy analysis
+		
+		//compare to stored plaintext
+		
+		//return result
+		return "TEST";
+	}
+
+	@Override
+	public String selectNewCryptogram()
+	{
+		this.pickRandomPlaintextFromFile();
+		
+		return this.cryptogram;
+	}
 	
 	
 }

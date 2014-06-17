@@ -12,4 +12,8 @@ public interface ControllerInteface
 	 * Picks a new randomly selected text as plaintext.
 	 */
 	public void pickRandomPlaintextFromFile();
+
+	public String solveCryptogram();
+
+	public String selectNewCryptogram();
 }

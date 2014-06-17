@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,11 +17,12 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements GUIInterface, ActionListener
 {
-	ArrayList<LetterPanel> letters = new ArrayList<LetterPanel>();
-	JButton[] buttons = new JButton[4];
-	JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-	JPanel Statistics = new JPanel();
-	JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	private ArrayList<LetterPanel> letters = new ArrayList<LetterPanel>();
+	private JButton[] buttons = new JButton[4];
+	private JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+	private JPanel Statistics = new JPanel();
+	private JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	private ControllerInteface controller;
 
 	public GUI(int width, int height, ControllerInteface c)
 	{
@@ -28,6 +30,7 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 		this.setLayout(new BorderLayout());
 		this.setSize(width, height);
 		this.setPreferredSize(new Dimension(width, height));
+		this.controller = c;
 		
 		Statistics.setPreferredSize(new Dimension(width / 3, height));
 		Statistics.setBackground(Color.GREEN);
@@ -39,6 +42,7 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 		{
 			buttons[i] = new JButton();
 			buttons[i].setPreferredSize(new Dimension(width / 6, height / 20));
+			buttons[i].addActionListener(this);
 			controls.add(buttons[i]);
 		}
 		buttons[0].setText("Reset");
@@ -65,6 +69,8 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 	@Override
 	public void displayCryptogramText(String cryptogramText)
 	{
+		this.letters = new ArrayList<LetterPanel>();
+		this.mainPanel.removeAll();
 		for (int i = 0; i < cryptogramText.length(); i++)
 		{
 			if(cryptogramText.charAt(i) == ' ')
@@ -83,12 +89,44 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 				mainPanel.add(p);
 			}
 		}
+		this.pack();
+		this.repaint();
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0)
+	public void actionPerformed(ActionEvent e)
 	{
-		
-		
+		//reset
+		if(e.getSource().equals(buttons[0]))
+		{
+			for (int i = 0; i < letters.size(); i++)
+			{
+				letters.get(i).setText("");
+			}
+		}
+		//solve
+		else if(e.getSource().equals(buttons[1]))
+		{
+			String plaintext = this.controller.solveCryptogram();
+			
+			for (int i = 0; i < letters.size(); i++)
+			{
+				letters.get(i).setText(""+plaintext.charAt(i));
+			}
+		}
+		//hint
+		else if(e.getSource().equals(buttons[2]))
+		{
+			Random rand = new Random();
+			int r = rand.nextInt(letters.size());
+			
+		}
+		//new cryptogram
+		else if(e.getSource().equals(buttons[3]))
+		{
+			String cr = this.controller.selectNewCryptogram();
+			this.displayCryptogramText(cr);
+			System.out.println(cr);
+		}
 	}
 }
