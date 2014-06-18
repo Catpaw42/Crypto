@@ -70,7 +70,6 @@ public class Controller implements ControllerInteface
 		text = text.toUpperCase();
 		//format: remove anything that is'nt a letter. (\p{L} or \p{Letter}: any kind of letter from any language. Unicode Regex)
 		text = text.replaceAll("[^\\p{L}\\s]+", "");
-		
 		this.plaintext = text;
 		this.cryptogram = encrypt(text);
 	}
@@ -123,7 +122,8 @@ public class Controller implements ControllerInteface
 	@Override
 	public String solveCryptogram()
 	{
-		//do your frequenzy analysis
+		//TODO: NYI
+		//do your frequency analysis
 		
 		//compare to stored plaintext
 		
@@ -134,9 +134,19 @@ public class Controller implements ControllerInteface
 	@Override
 	public String selectNewCryptogram()
 	{
+		//create new key
+		this.CryptogramKey = this.generateNewKey();
+		//select new plaintext and update cryptogram
 		this.pickRandomPlaintextFromFile();
 		
+		//return new cryptogram string
 		return this.cryptogram;
+	}
+
+	@Override
+	public String getPlaintext()
+	{
+		return this.plaintext;
 	}
 	
 	

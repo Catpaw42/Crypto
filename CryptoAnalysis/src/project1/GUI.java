@@ -6,16 +6,20 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class GUI extends JFrame implements GUIInterface, ActionListener
+public class GUI extends JFrame implements GUIInterface, ActionListener, KeyListener
 {
 	private ArrayList<LetterPanel> letters = new ArrayList<LetterPanel>();
 	private JButton[] buttons = new JButton[4];
@@ -84,7 +88,7 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 			}
 			else
 			{
-				LetterPanel p = new LetterPanel(mainPanel.getWidth() / 25, mainPanel.getHeight() / 10, cryptogramText.charAt(i));
+				LetterPanel p = new LetterPanel(mainPanel.getWidth() / 25, mainPanel.getHeight() / 10, cryptogramText.charAt(i), this);
 				letters.add(p);
 				mainPanel.add(p);
 			}
@@ -119,7 +123,13 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 		{
 			Random rand = new Random();
 			int r = rand.nextInt(letters.size());
-			
+			String p = this.controller.getPlaintext();
+			p = p.replaceAll("[^\\p{L}]+", "");
+			for (int j = 0; j < letters.size(); j++)
+			{
+				if(letters.get(j).getCryptogramLetter().equals(letters.get(r).getCryptogramLetter()))
+					letters.get(j).setText("" + p.charAt(r));
+			}
 		}
 		//new cryptogram
 		else if(e.getSource().equals(buttons[3]))
@@ -128,5 +138,45 @@ public class GUI extends JFrame implements GUIInterface, ActionListener
 			this.displayCryptogramText(cr);
 			System.out.println(cr);
 		}
+	}
+	
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e)
+	{
+		for (int i = 0; i < letters.size(); i++)
+		{
+			if(e.getSource().equals(letters.get(i).getComponent(0)))
+			{
+				String t = "" + e.getKeyChar();
+				t = t.toUpperCase();
+				for (int j = 0; j < letters.size(); j++)
+				{
+					if(letters.get(j).getCryptogramLetter().equals(letters.get(i).getCryptogramLetter()))
+						letters.get(j).setText(t);
+				}
+			}		
+		}
+		
+		String text = "";
+		String pText = this.controller.getPlaintext();
+		pText = pText.replaceAll("[^\\p{L}]+", "");
+		for (int i = 0; i < letters.size(); i++)
+			text += letters.get(i).getText();
+		
+		if(text.equals(pText))
+			JOptionPane.showMessageDialog(new JFrame(), "You solved it!");
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e)
+	{
+
 	}
 }

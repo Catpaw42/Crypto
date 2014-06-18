@@ -16,4 +16,6 @@ public interface ControllerInteface
 	public String solveCryptogram();
 
 	public String selectNewCryptogram();
+
+	public String getPlaintext();
 }
