@@ -122,13 +122,13 @@ public class Controller implements ControllerInteface
 	@Override
 	public String solveCryptogram()
 	{
-		//TODO: NYI
+		//TODO: NYI for now, just returns plaintext
 		//do your frequency analysis
 		
 		//compare to stored plaintext
 		
 		//return result
-		return "TEST";
+		return this.plaintext;
 	}
 
 	@Override
