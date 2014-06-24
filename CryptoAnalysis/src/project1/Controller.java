@@ -2,6 +2,8 @@ package project1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.ObjectInputStream.GetField;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
@@ -14,7 +16,8 @@ import java.util.Scanner;
 public class Controller implements ControllerInteface
 {
 	private HashMap<Character, Character> CryptogramKey;
-	private char[] charSet  = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	private final double[] englishFreq = {7.739, 1.697, 2.549, 4.140, 12.905, 2.244, 1.893, 6.268, 7.059, 0.176, 0.606, 4.001, 2.741, 7.019, 7.500, 1.574, 0.116, 6.066, 6.139, 8.829, 2.811, 1.059, 2.279, 0.157, 2.362, 0.170};
+	public static final char[] charSet  = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 	private GUIInterface gui;
 	private String plaintext;
 	private String cryptogram;
@@ -23,7 +26,8 @@ public class Controller implements ControllerInteface
 	/**
 	 * Takes a single String argument to indicate where the plaintexts are.
 	 * @param plaintextFilePath path to a file containing one or more single line plaintexts.
-	 * @throws FileNotFoundException if no file was found at the given path.
+	 * @param frequencyDataFile An English letter text to be used as a basis for the frequency-comparison
+	 * @throws FileNotFoundException if no file was found at one of the given paths.
 	 */
 	public Controller(String plaintextFilePath) throws FileNotFoundException
 	{
@@ -34,7 +38,7 @@ public class Controller implements ControllerInteface
 			throw new FileNotFoundException("Plaintext file did'nt load");
 		
 		//setup first cryptogram
-		this.setPlaintext("this is a test that is longer");
+		this.pickRandomPlaintextFromFile();
 		gui.displayCryptogramText(this.cryptogram);
 	}
 	
@@ -148,6 +152,23 @@ public class Controller implements ControllerInteface
 	{
 		return this.plaintext;
 	}
-	
-	
+
+	@Override
+	public double[] getFrequency(frequencyGroup fg)
+	{
+		
+		if(fg == frequencyGroup.ENGLISH)
+			return this.englishFreq;
+		else
+		{
+			double[] frequencyArray = new double[charSet.length];
+			for (int i = 0; i < frequencyArray.length; i++)
+			{
+				frequencyArray[i] = FrequencyAnalyser.countOcurrencesInString(charSet[i], this.cryptogram) * 100 / this.cryptogram.length();
+			}
+			return frequencyArray;
+		}
+		
+		
+	}
 }

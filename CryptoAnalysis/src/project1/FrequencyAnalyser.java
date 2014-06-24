@@ -29,7 +29,7 @@ public class FrequencyAnalyser
 		
 	}
 	
-	public static void generateReport(String path) throws FileAlreadyExistsException
+	public static File generateReport(String path) throws FileAlreadyExistsException
 	{
 		File newfile = new File(path.substring(0, path.length()-4) + "_REPORT.txt");
 		if(newfile.exists())
@@ -49,6 +49,8 @@ public class FrequencyAnalyser
 			writer.println("-------------------------------");
 			writer.println("total length = " + total);
 			writer.close();
+			
+			return newfile;
 		}
 		catch (FileNotFoundException e)
 		{
@@ -59,6 +61,7 @@ public class FrequencyAnalyser
 		{
 			e.printStackTrace();
 		}
+		return null;
 	}
 	/**
 	 * Count the total number of Unicode letters that exist in this file
@@ -142,17 +145,16 @@ public class FrequencyAnalyser
 		return ocurence;
 	}
 	
-	public static void main(String[] args)
+	public static int countOcurrencesInString(char searchFor, String searchIn)
 	{
-		try
+		searchFor = Character.toUpperCase(searchFor);
+		searchIn = searchIn.toUpperCase();
+		int count = 0;
+		for (int i = 0; i < searchIn.length(); i++)
 		{
-			FrequencyAnalyser.generateReport("src/project1/Pride_and_Prejudice_by_Jane_Austen.txt");
+			if(searchIn.charAt(i) == searchFor)
+				count++;
 		}
-		catch (FileAlreadyExistsException e)
-		{
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
+		return count;
 	}
-	
 }

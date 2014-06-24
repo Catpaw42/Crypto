@@ -18,4 +18,8 @@ public interface ControllerInteface
 	public String selectNewCryptogram();
 
 	public String getPlaintext();
+
+	public double[] getFrequency(frequencyGroup fg);
+	
+	public enum frequencyGroup{CRYPTOGRAM, ENGLISH}
 }

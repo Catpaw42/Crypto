@@ -8,23 +8,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import project1.ControllerInteface.frequencyGroup;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements GUIInterface, ActionListener, KeyListener
 {
 	private ArrayList<LetterPanel> letters = new ArrayList<LetterPanel>();
-	private JButton[] buttons = new JButton[4];
+	private JButton[] buttons = new JButton[5];
 	private JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-	private JPanel Statistics = new JPanel();
+	private JPanel statistics = new JPanel();
 	private JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	private ControllerInteface controller;
 
@@ -35,13 +39,12 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 		this.setSize(width, height);
 		this.setPreferredSize(new Dimension(width, height));
 		this.controller = c;
-		
-		Statistics.setPreferredSize(new Dimension(width / 3, height));
-		Statistics.setBackground(Color.GREEN);
-		Statistics.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		this.getContentPane().add(Statistics, BorderLayout.EAST);
-		
-		
+
+		statistics.setPreferredSize(new Dimension(width / 3, height));
+		statistics.setBackground(Color.GREEN);
+		statistics.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		this.getContentPane().add(statistics, BorderLayout.EAST);
+
 		for (int i = 0; i < buttons.length; i++)
 		{
 			buttons[i] = new JButton();
@@ -53,18 +56,17 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 		buttons[1].setText("Solve");
 		buttons[2].setText("Hint");
 		buttons[3].setText("New Cryptogram");
-		
+		buttons[4].setText("English Frequency");
+
 		controls.setPreferredSize(new Dimension(width ,height / 8));
 		controls.setBackground(Color.GREEN);
 		this.getContentPane().add(controls, BorderLayout.SOUTH);
-		
 
 		mainPanel.setPreferredSize(new Dimension(width * 8/10, height * 3/4));
 		mainPanel.setBackground(Color.GREEN);
 		mainPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		
-		
+
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		this.pack();
@@ -97,6 +99,25 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 		this.repaint();
 	}
 
+	public void displayFrequencies(double[] frequencyArray)
+	{
+		String text ="<html>" + (this.buttons[4].getText().equalsIgnoreCase("English Frequency") ? "Cryptogram<br>" : "English<br>");
+		NumberFormat formatter = new DecimalFormat("#0.000");
+		for (int i = 0; i < frequencyArray.length; i++)
+		{
+			text += Controller.charSet[i] + " : " + formatter.format(frequencyArray[i]) + "%<br>";
+		}
+		
+		this.statistics.removeAll();
+		JLabel freqLabel = new JLabel();
+		freqLabel.setPreferredSize(new Dimension(this.statistics.getWidth() / 2, this.statistics.getHeight()));
+		freqLabel.setText(text);
+		this.statistics.add(freqLabel);
+		
+		this.pack();
+		this.repaint();
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
@@ -112,7 +133,7 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 		else if(e.getSource().equals(buttons[1]))
 		{
 			String plaintext = this.controller.solveCryptogram();
-			
+
 			for (int i = 0; i < letters.size(); i++)
 			{
 				letters.get(i).setText(""+plaintext.charAt(i));
@@ -138,13 +159,29 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 			this.displayCryptogramText(cr);
 			System.out.println(cr);
 		}
+		//change frequency displayed
+		else if(e.getSource().equals(buttons[4]))
+		{
+			double[] frequencyArray;
+			if(buttons[4].getText().equalsIgnoreCase("English Frequency"))
+			{
+				frequencyArray = this.controller.getFrequency(frequencyGroup.ENGLISH);
+				buttons[4].setText("Cryptogram Frequency");
+			}
+			else
+			{
+				frequencyArray = this.controller.getFrequency(frequencyGroup.CRYPTOGRAM);
+				buttons[4].setText("English Frequency");
+			}
+				this.displayFrequencies(frequencyArray);
+		}
 	}
-	
+
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		
+
 	}
 
 	@Override
@@ -163,13 +200,13 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 				}
 			}		
 		}
-		
+
 		String text = "";
 		String pText = this.controller.getPlaintext();
 		pText = pText.replaceAll("[^\\p{L}]+", "");
 		for (int i = 0; i < letters.size(); i++)
 			text += letters.get(i).getText();
-		
+
 		if(text.equals(pText))
 			JOptionPane.showMessageDialog(new JFrame(), "You solved it!");
 	}
