@@ -10,19 +10,7 @@ public class Main
 	public static void main(String[] args)
 	{
 //		generateTable();
-		
-		for (int i = 10 ; i >= 0; i--)
-		{
-			int l = 0;
-			for (int j = i; j < 10; j++)
-			{
-				System.out.print((i - j));
-			}
-			System.out.println();
-		}
-		
-//		breakCode();
-
+		breakCode();
 	}
 	
 	private static void breakCode()
@@ -34,17 +22,25 @@ public class Main
 		
 		int chainLength = (int)Math.pow(2, 10);	//length of chain
 		
-		for (int i = chainLength - 1; i >= 0; i--)
+		for (int i = 0; i < chainLength; i++)
 		{
-			int u = FOBResponse;
-			for (int j = i; j < chainLength - 1; j++)
+			int r = FOBResponse;
+			for (int j = 0; j < i; j++)
 			{
-				u = EncFunc.funktion(u, i - j);
+				r = EncFunc.funktion(r, (chainLength - i) + j);
 			}
-			if(rainbow.containsEndPoint(u))
+			if(rainbow.containsEndPoint(r))
 			{
-				System.out.println("found endpoint: u = " + u);
-				break;
+				System.out.println("found endpoint: r = " + r + " starting at at column = " + (chainLength - i));
+				int start = rainbow.get(r);
+				int count = 0;
+				for (int j = 0; j < chainLength - i - 1; j++)
+				{
+					start = EncFunc.funktion(start, j);
+					count++;
+				}
+				System.out.println("key = " + Integer.toHexString(start) + " after " + count + " encodings");
+				System.out.println(start == EncFunc.fobSecret);
 			}
 		}
 		

@@ -8,6 +8,7 @@ public class EncFunc
 {
 	//the 28 bit hex challenge
 	private static final int challenge = 0xEA85AFC;
+	public static final int fobSecret = 0x0000F88;
 	
 	/**
 	 * Represents the key's funktion, takes a chalenge and computes a response based on its internal secret.
@@ -16,8 +17,6 @@ public class EncFunc
 	 */
 	public static int FOBfunktion(int u /* must be 28bit */)
 	{	
-		int fobSecret = 0xFF12A8F;
-		
 		//concat into one long (s||challenge) chalenge.length() = 28
 		long total = ((long)fobSecret << 28) | u;
 		
