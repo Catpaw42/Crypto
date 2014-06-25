@@ -64,7 +64,6 @@ public class Main
 		System.out.println("starting table loop");
 		for (int i = 0; i < tableSize; i++)
 		{
-			
 			int r = 0;
 			while(rainbow.containsStartPoint(r))
 				r = rand.nextInt(tableSize);

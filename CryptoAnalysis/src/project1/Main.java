@@ -12,7 +12,6 @@ public class Main
 		try
 		{
 			c = new Controller("src/project1/plaintexts.txt");
-			System.out.println();
 		}
 		catch (FileNotFoundException e)
 		{

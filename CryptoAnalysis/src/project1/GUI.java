@@ -157,7 +157,6 @@ public class GUI extends JFrame implements GUIInterface, ActionListener, KeyList
 		{
 			String cr = this.controller.selectNewCryptogram();
 			this.displayCryptogramText(cr);
-			System.out.println(cr);
 		}
 		//change frequency displayed
 		else if(e.getSource().equals(buttons[4]))

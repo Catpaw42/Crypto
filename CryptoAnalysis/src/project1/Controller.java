@@ -67,8 +67,7 @@ public class Controller implements ControllerInteface
 		return key;
 	}
 
-	@Override
-	public void setPlaintext(String text)
+	private void setPlaintext(String text)
 	{
 		//format: uppercase letters
 		text = text.toUpperCase();
@@ -77,9 +76,8 @@ public class Controller implements ControllerInteface
 		this.plaintext = text;
 		this.cryptogram = encrypt(text);
 	}
-	
-	@Override
-	public void pickRandomPlaintextFromFile()
+
+	private void pickRandomPlaintextFromFile()
 	{
 		try
 		{
@@ -90,7 +88,6 @@ public class Controller implements ControllerInteface
 				scan.nextLine();
 				lines++;
 			}
-			System.out.println(lines);
 			scan.close();
 			
 			Random rand = new Random();
@@ -132,7 +129,7 @@ public class Controller implements ControllerInteface
 		//compare to stored plaintext
 		
 		//return result
-		return this.plaintext;
+		return this.plaintext.replaceAll("[^\\p{L}]+", "");
 	}
 
 	@Override
@@ -156,7 +153,6 @@ public class Controller implements ControllerInteface
 	@Override
 	public double[] getFrequency(frequencyGroup fg)
 	{
-		
 		if(fg == frequencyGroup.ENGLISH)
 			return this.englishFreq;
 		else
@@ -167,8 +163,6 @@ public class Controller implements ControllerInteface
 				frequencyArray[i] = FrequencyAnalyser.countOcurrencesInString(charSet[i], this.cryptogram) * 100 / this.cryptogram.length();
 			}
 			return frequencyArray;
-		}
-		
-		
+		}	
 	}
 }
